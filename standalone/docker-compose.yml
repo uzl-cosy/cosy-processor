@@ -1,0 +1,29 @@
+services:
+  frontend:
+    build:
+      context: ../../cosy-frontend
+      dockerfile: Dockerfile.arm64
+      args:
+        - BACKEND_URL=http://localhost:8080
+        - COSY_DEVICE_URL_1=http://localhost:8000
+        - COSY_DEVICE_LABEL_1=CoSy-Standalone
+    restart: unless-stopped
+    ports:
+      - "80:80"
+  backend:
+    build:
+      context: ../../cosy-backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - JWT_SECRET=supermegasecret!
+      - MONGODB_URL=mongodb://cosy:local@db:27017/
+      - SEED_DB=1
+  db:
+    image: mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: cosy
+      MONGO_INITDB_ROOT_PASSWORD: local

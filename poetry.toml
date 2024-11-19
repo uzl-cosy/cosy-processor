@@ -1,0 +1,6 @@
+[virtualenvs]
+in-project = true
+
+[http-basic.gitlab]
+username = "poetrydownload"
+password = "gldt-LJHhvdYwxwWopcg5n9gx"

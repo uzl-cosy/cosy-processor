@@ -1,0 +1,83 @@
+tools:
+  recorder:
+    type: audio_recorder
+    settings:
+      audio_device: "Wireless Microphone RX"
+      channels: 2
+      sample_rate: 44100
+      chunk_length: 30
+  cleaner:
+    type: audio_cleaner
+    num_workers: 4
+    settings:
+      compressor:
+        plugin_file: /Library/Audio/Plug-Ins/Components/FabFilter Pro-C 2.component
+        state_file: config/StateFiles/FabComp
+      gate:
+        plugin_file: /Library/Audio/Plug-Ins/Components/FabFilter Pro-G.component
+        state_file: config/StateFiles/FabGate
+  extractdialogue:
+    type: audio_enhancer
+    num_workers: 1
+    settings:
+      plugin_file: /Library/Audio/Plug-Ins/VST3/Acon Digital/ExtractDialogue.vst3
+      state_files: config/StateFiles/ExtractDialogue
+  transcript:
+    type: ai_transcript
+    num_workers: 1
+  forcedalignment:
+    type: ai_forcedalignment
+    num_workers: 1
+  forcedalignment_preprocessor:
+    type: ai_forcedalignment_preprocessor
+    num_workers: 1
+  pitchloudness:
+    type: ai_pitchloudness
+    num_workers: 1
+  nlp:
+    type: ai_nlp
+    num_workers: 1
+  audio_stitcher:
+    type: audio_stitcher
+    num_workers: 1
+  backend_packager:
+    type: backend_packager
+    num_workers: 1
+  backend_analysis_communicator:
+    type: communicator
+    num_workers: 1
+    settings:
+      format: json
+      url: https://cosy.uni-luebeck.de:3011/analysis
+      method: PUT
+  backend_audio_communicator:
+    type: communicator
+    num_workers: 1
+    settings:
+      format: file
+      method: POST 
+      url: https://cosy.uni-luebeck.de:3011/audio
+
+workflow:
+  recorder:
+    input: []
+  extractdialogue:
+    input: [recorder]
+  cleaner:
+    input: [extractdialogue]
+  transcript:
+    input: [cleaner]
+  forcedalignment:
+    input: [cleaner, transcript]
+  pitchloudness:
+    input: [recorder, forcedalignment]
+  nlp:
+    input: [transcript]
+  audio_stitcher:
+    input: [extractdialogue]
+  backend_audio_communicator:
+    input: [audio_stitcher]
+  backend_packager:
+    input: [forcedalignment, pitchloudness, nlp]
+  backend_analysis_communicator:
+    input: [backend_packager]

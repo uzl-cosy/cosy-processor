@@ -1,0 +1,12 @@
+.fade-out {
+    opacity: 0;
+    transition: opacity 1s ease-out;
+}
+
+.hidden {
+    display: none;
+}
+
+.loading-container {
+    color: white;
+}

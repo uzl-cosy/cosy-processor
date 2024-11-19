@@ -1,0 +1,7 @@
+tools: 
+  backend_analysis_communicator:
+    settings:
+      url: http://localhost:8080/analysis
+  backend_audio_communicator:
+    settings:
+      url: http://localhost:8080/audio

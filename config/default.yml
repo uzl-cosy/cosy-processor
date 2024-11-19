@@ -1,0 +1,83 @@
+application_settings:
+  data_dir: ./data
+  cleanup_on_launch: true
+
+internal_api_settings:
+  port: 8000
+
+tool_binaries:
+  audio_cleaner:
+    base_command:
+      - bin/AudioCleaner
+      - "-r"
+      - "0.0001"
+  audio_enhancer:
+    base_command:
+      - bin/AudioEnhancer
+  ai_transcript:
+    base_command:
+      - ".venv/bin/python"
+      - "-m"
+      - "laboratorium_ai_asr"
+  ai_forcedalignment_preprocessor:
+    base_command:
+      - ".venv/bin/python"
+      - "-m"
+      - "laboratorium_ai_forced_alignment.Preprocessing"
+  ai_forcedalignment:
+    base_command:
+      - ".venv/bin/python"
+      - "-m"
+      - "laboratorium_ai_forced_alignment"
+  ai_pitchloudness:
+    base_command:
+      - ".venv/bin/python"
+      - "-m"
+      - "laboratorium_ai_pitch_loudness"
+  ai_nlp:
+    base_command:
+      - ".venv/bin/python"
+      - "-m"
+      - "laboratorium_ai_nlp"
+
+tools:
+  recorder:
+    type: audio_recorder
+    settings:
+      audio_device: "Wireless Microphone RX"
+      channels: 2
+      sample_rate: 44100
+      chunk_length: 30
+  transcript:
+    type: ai_transcript
+    num_workers: 1
+  forcedalignment:
+    type: ai_forcedalignment
+    num_workers: 1
+  forcedalignment_preprocessor:
+    type: ai_forcedalignment_preprocessor
+    num_workers: 1
+  pitchloudness:
+    type: ai_pitchloudness
+    num_workers: 1
+  nlp:
+    type: ai_nlp
+    num_workers: 1
+  audio_stitcher:
+    type: audio_stitcher
+    num_workers: 1
+  
+
+workflow:
+  recorder:
+    input: []
+  transcript:
+    input: [recorder]
+  forcedalignment:
+    input: [recorder, transcript]
+  pitchloudness:
+    input: [recorder, forcedalignment]
+  nlp:
+    input: [transcript]
+  audio_stitcher:
+    input: [recorder]
