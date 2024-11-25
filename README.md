@@ -1,57 +1,161 @@
-# CoSy Device Application
+# CoSy
 
-Willkommen zu "Mein Python-Projekt"! Dieses README führt Sie durch die Installation und Ausführung des Projekts. Folgen Sie diesen Schritten, um die Umgebung einzurichten und das Projekt zu starten.
+![Python](https://img.shields.io/badge/Python-3.10.13-blue.svg)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
+![Poetry](https://img.shields.io/badge/Build-Poetry-blue.svg)
 
-## Voraussetzungen
+**CoSy** (Communication Support System) is an AI-based learning assistance system developed at the University of Lübeck. It supports the development of patient-oriented communication skills among students, particularly in medical contexts. CoSy records role-playing scenarios in communication modules using microphones. It provides participants with individual feedback based on quantifiable parameters such as volume, speaking pace, and speaking time. This feedback can be effectively integrated into instructor feedback.
 
-Stellen Sie sicher, dass Sie Python auf Ihrem System installiert haben. Dieses Projekt wurde mit Python 3.12 getestet.
+## Table of Contents
+
+- [CoSy](#cosy)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Technical Architecture](#technical-architecture)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [Command Line Execution](#command-line-execution)
+    - [Configuration](#configuration)
+    - [Starting with Electron GUI](#starting-with-electron-gui)
+    - [Local Hosting of Backend and Frontend](#local-hosting-of-backend-and-frontend)
+  - [License](#license)
+
+## Overview
+
+**CoSy** is an AI-based learning assistance system developed at the University of Lübeck. It supports the development of patient-oriented communication skills among students, particularly in medical contexts.
+
+## Technical Architecture
+
+The **CoSy** system consists of several components:
+
+- **CoSy Processor**: This repository contains the software that uses and controls specific AI modules and communicates with the backend. The processor handles all data processing locally on the executing device, ensuring data privacy and efficiency.
+- **CoSy Backend**: The processor communicates with the backend, which stores and manages the processed data.
+- **CoSy Frontend**: The backend information is displayed in a frontend application, providing participants and instructors with insightful feedback and analysis.
+
+This architecture allows for efficient processing and secure handling of sensitive data, as audio recordings and analyses are performed locally before being communicated to the backend for aggregation and display.
 
 ## Installation
 
-### Schritt 1: pipx installieren
+To install and set up **CoSy**, follow these steps:
 
-`pipx` ermöglicht die Installation von Python-Paketen in isolierten Umgebungen. Installieren Sie `pipx`, falls noch nicht geschehen, indem Sie den folgenden Befehl in Ihrem Terminal ausführen:
 
-```bash
-python3 -m pip install --user pipx
-python3 -m pipx ensurepath
-```
+1. **Clone the repository:**
 
-### Schritt 2: Poetry installieren
+     ```bash
+     git clone https://github.com/yourusername/cosy.git
+     cd cosy
+     ```
 
-Nachdem `pipx` installiert ist, verwenden Sie es, um `poetry` zu installieren:
+2. **Install dependencies:**
 
-```bash
-pipx install poetry
-```
+     Make sure you have [Poetry](https://python-poetry.org/) installed. Then run:
 
-### Schritt 3: Poetry-Umgebung für Python 3.12 aktivieren
+     ```bash
+     poetry install
+     ```
 
-Aktivieren Sie die passende Poetry-Umgebung für Python 3.12:
+## Usage
 
-```bash
-poetry env use 3.12
-```
+### Command Line Execution
 
-### Schritt 4: Abhängigkeiten installieren
-
-Installieren Sie die Projekt-Abhängigkeiten mit `poetry`:
+You can run **CoSy** directly from the command line using the following command:
 
 ```bash
-poetry install
+poetry run main -c config.yml
 ```
 
-## Ausführung
+- **Note:** The parameter ```-c config.yml``` specifies the configuration file to use. If you omit this parameter, **CoSy** will use the default configuration.
 
-Nach der Installation der Abhängigkeiten können Sie das Hauptskript des Projekts auf zwei Arten ausführen:
+### Configuration
 
-### Option 1: Direkte Ausführung
+**CoSy** uses a YAML configuration file (```config.yml```) to customize its behavior. You can modify the default configuration or provide your own configuration file.
 
-```bash
-poetry run main
-```
+- **Using the default configuration:**
 
-### Option 2: Ausführung im Python Debugger in VSCode
+    Simply run:
 
-1. Öffnen Sie VSCode.
-2. Starten Sie den Debugger mit der Konfiguration `cosy` bzw. der sich im Projektverzeichnis befindlichen `launch.json`.
+    ```bash
+    poetry run main
+    ```
+
+    This runs **CoSy** with default settings.
+
+- **Using a custom configuration file:**
+
+    Create your own ```config.yml``` file with desired settings and run:
+
+    ```bash
+    poetry run main -c path/to/your_config.yml
+    ```
+
+### Starting with Electron GUI
+
+**CoSy** can also be started using an Electron GUI that provides a more user-friendly interface.
+
+1. **Navigate to the GUI directory:**
+
+     ```bash
+     cd gui
+     ```
+
+2. **Build the GUI:**
+
+     You need to build the Electron GUI before starting.
+
+     - Install dependencies:
+
+         ```bash
+         npm install
+         ```
+
+     - Build GUI:
+
+         ```bash
+         npm run build
+         ```
+
+3. **Start the GUI:**
+
+     After building, you can start the Electron application:
+
+     ```bash
+     npm start
+     ```
+
+### Local Hosting of Backend and Frontend
+
+You can host local instances of the CoSy backend and frontend using Docker Compose.
+
+1. **Clone and prepare related repositories:**
+
+    ```bash
+    # Clone backend repository
+    git clone https://github.com/yourusername/cosy-backend.git
+    
+    # Clone frontend repository
+    git clone https://github.com/yourusername/cosy-frontend.git
+    
+    # Create symbolic links
+    ln -s ../cosy-backend ./backend
+    ln -s ../cosy-frontend ./frontend
+    ```
+2. **Edit Docker Compose file:**
+    Update the context path in the Docker Compose file (```docker-compose.yml```) to point to the backend and frontend directories.
+3. **Build Docker images:**
+
+    ```bash
+    docker-compose build
+    ```
+
+4. **Start services with Docker Compose:**
+
+    ```bash
+    docker-compose up
+    ```
+
+5. **Access the application:**
+
+    Open your web browser and navigate to the appropriate URL (e.g., ```http://localhost:80```) to access the CoSy application.
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
